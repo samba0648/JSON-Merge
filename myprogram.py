@@ -11,11 +11,11 @@ def all_folder(f_path,f_name):
         print("folder not exists")
     return files
 
-folder_path = input("Enter Folder path: ")
-file_basename = input("Enter File Base Name: ")
-output_file_name = input("Enter Output file base name: ")
+folder_path = input()
+file_basename = input()
+output_file_name = input()
 try:
-    max_file_size = int(input("Enter Max file size in Bytes:"))
+    max_file_size = int(input())
     #Reading all the json files starts with given base file name and in the given folder
     all_files = all_folder(folder_path,file_basename)
     final = dict()
@@ -25,28 +25,27 @@ try:
         #opening and reading the file
         with open(file,"r")as f:
             data = json.load(f)
-        for j in data:
-            if j in final.keys():
-                value = data[j]
-                li = final[j]
-                for ele in value:
-                    li.append(ele)
-                final[j]=li
-
-            else:
-                for ele in data[j]:
-                    new_list.append(ele)
-                final[j] = new_list
+        obj=list(data.keys())[0]
+        if obj in final.keys():
+            value = data[obj]
+            new_list = final[obj]
+            for ele in value:
+                new_list.append(ele)
+            final[obj]=new_list
+        else:
+            for ele in data[obj]:
+                new_list.append(ele)
+            final[obj] = new_list
     
     #writing the dictionary values into json files
     count = 1
-    for j in final.items():
-        di = dict()
-        di[j[0]] = j[1]
+    for obj in final.items():
+        my_dict = dict()
+        my_dict[obj[0]] = obj[1]
         try:
             file = output_file_name+str(count)+".json"
             with open(file,"w") as output_file:
-                json.dump(di,output_file,indent = 2,separators=(",",":"))
+                json.dump(my_dict,output_file,indent = 2)
                 count+=1
             #checking the file size of the file with given max file size
             try:
@@ -55,7 +54,6 @@ try:
                     print("file size is too high")
             except:
                 print("Error in fetching file size")
-            
         except:
             print("Unable to write the data into output file")
 except:
